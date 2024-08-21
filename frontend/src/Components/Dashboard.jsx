@@ -179,7 +179,7 @@ export function Dashboard() {
       <TopHeader username={user.name} />
       <Balance balance={balance} />
       <UserList users={users} />
-      <Copyright sx={{ mt: 8, mb: 1 }} />
+      <Copyright sx={{ mt: 4, mb }} />
     </div>
   );
 }
