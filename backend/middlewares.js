@@ -1,4 +1,3 @@
-const { JWT_SECRET } = require("./config");
 const jwt = require("jsonwebtoken");
 
 function authMiddleware(req, res, next) {
