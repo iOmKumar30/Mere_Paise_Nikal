@@ -15,6 +15,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { ClassNames } from "@emotion/react";
 
 export function Copyright(props) {
   return (
@@ -59,7 +60,7 @@ export function Signin() {
       const user = {
         name: response.data.name,
         token: response.data.token,
-        id: response.data.id
+        id: response.data.id,
       };
 
       localStorage.setItem("user", JSON.stringify(user));
@@ -137,7 +138,11 @@ export function Signin() {
               {loading ? "Signing In..." : "Sign In"}
             </Button>
             {error && (
-              <Typography color="error" variant="body2" sx={{ mt: 2 }}>
+              <Typography
+                color="error"
+                variant="body2"
+                sx={{ mt: 2, textAlign: "center" }}
+              >
                 {error}
               </Typography>
             )}
