@@ -37,6 +37,18 @@ export function Copyright(props) {
 
 const defaultTheme = createTheme();
 
+export function Note() {
+  return (
+    <div>
+      <p className="text-gray-500 text-sm mt-4">
+        Note: Please wait for 40-45 seconds before sending the first request as
+        the server takes some time to initialize after being inactive for a
+        while.l̥
+      </p>
+    </div>
+  );
+}
+
 export function Signin() {
   const [username, setUserName] = useState("");
   const [password, setPassword] = useState("");
@@ -76,6 +88,7 @@ export function Signin() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <Note />
         <Box
           sx={{
             bgcolor: "background.paper",

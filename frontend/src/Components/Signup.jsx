@@ -13,7 +13,7 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
-import { Copyright } from "./Signin";
+import { Copyright, Note } from "./Signin";
 
 const defaultTheme = createTheme();
 export function Signup() {
@@ -27,6 +27,7 @@ export function Signup() {
     <ThemeProvider theme={defaultTheme}>
       <Container component="main" maxWidth="xs">
         <CssBaseline />
+        <Note />
         <Box
           sx={{
             bgcolor: "background.paper",
