@@ -1,5 +1,4 @@
 const jwt = require("jsonwebtoken");
-const { JWT_SECRET } = require("./config");
 function authMiddleware(req, res, next) {
   const header = req.headers.authorization;
 
@@ -11,7 +10,7 @@ function authMiddleware(req, res, next) {
   }
   const token = header.split(" ")[1];
   try {
-    const decoded = jwt.verify(token, JWT_SECRET);
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
     req.userId = decoded.userId;
     /*Assigning to req.userId: The middleware assigns the userId from the decoded token to the userId property on the req object. This makes the userId accessible in subsequent middleware functions or route handlers, enabling the application to identify the authenticated user. */
     next();
