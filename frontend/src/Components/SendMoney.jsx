@@ -97,7 +97,7 @@ export function SendMoney() {
           {loading ? "Sending..." : "Send Money"}
         </button>
       </form>
-      <Copyright sx={{ mt: 8, mb: 4 }} />
+      <Copyright sx={{ mt: 8, mb: 1 }} />
     </div>
   );
 }
