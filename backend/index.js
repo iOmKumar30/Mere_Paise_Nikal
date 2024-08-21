@@ -5,7 +5,7 @@ const cors = require("cors");
 const app = express();
 
 const corsOptions = {
-  origin: 'https://mere-paise-nikal-backend.onrender.com/',
+  origin: 'https://mere-paise-nikal.onrender.com/',
   optionsSuccessStatus: 200 
 };
 
