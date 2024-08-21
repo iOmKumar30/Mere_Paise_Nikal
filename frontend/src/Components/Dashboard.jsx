@@ -24,7 +24,6 @@ function TopHeader({ username, image }) {
           className="text-white bg-gray-800 hover:bg-gray-900 focus:outline-none focus:ring-4 focus:ring-gray-300 font-medium rounded-full text-sm px-5 py-2.5 me-2 mb-2"
           onClick={() => {
             localStorage.clear();
-            window.location.reload();
             navigate("/signin");
           }}
         >
@@ -66,7 +65,7 @@ function UserList({ users = [] }) {
       if (searchInputRef.current) {
         searchInputRef.current.focus();
       }
-    }, 100); 
+    }, 100);
 
     return () => clearTimeout(focusTimeout);
   }, []);
@@ -90,7 +89,7 @@ function UserList({ users = [] }) {
         autoComplete="on"
         className="p-2 mb-4 border-black rounded-lg w-full"
         style={{ border: "1px solid black" }}
-        ref={ searchInputRef }
+        ref={searchInputRef}
       />
       {filteredUsers.map((user) => (
         <div key={user.id} className="flex justify-between pt-2">
