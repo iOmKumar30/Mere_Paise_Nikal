@@ -8,7 +8,6 @@ app.use(cors());
 
 app.use(express.json());
 
-// Use the mainRouter for all routes under /api/v1
 app.use("/api/v1", mainRouter);
 
 const port = process.env.PORT || 3000;

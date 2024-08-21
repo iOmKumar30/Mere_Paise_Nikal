@@ -6,7 +6,7 @@ const { Account } = require("../db");
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middlewares");
 const cors = require("cors");
-
+const { JWT_SECRET } = require("../config");
 const app = express();
 app.use(express.json());
 app.use(cors());
@@ -77,7 +77,7 @@ router.post("/signin", async (req, res) => {
     res.json({
       token: token,
       name: user.firstName,
-      id : user._id
+      id: user._id,
     });
     return;
   } else {
