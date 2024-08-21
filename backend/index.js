@@ -4,13 +4,7 @@ const cors = require("cors");
 
 const app = express();
 
-const corsOptions = {
-  origin: 'https://mere-paise-nikal.onrender.com',
-  optionsSuccessStatus: 200 
-};
-
-app.use(cors(corsOptions));
-app.options('*', cors(corsOptions)); 
+app.use(cors());
 
 app.use(express.json());
 
