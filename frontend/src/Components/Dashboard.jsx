@@ -138,7 +138,7 @@ export function Dashboard() {
     const getUsers = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/user/bulk"
+          "https://mere-paise-nikal-backend.onrender.com/api/v1/user/bulk"
         );
         const data = response.data.users;
 
@@ -155,7 +155,7 @@ export function Dashboard() {
     const getBalance = async () => {
       try {
         const response = await axios.get(
-          "http://localhost:3000/api/v1/account/balance",
+          "https://mere-paise-nikal-backend.onrender.com/api/v1/account/balance",
           {
             headers: { Authorization: `Bearer ${storedUser.token}` },
           }

@@ -103,7 +103,7 @@ export function Signup() {
                 e.preventDefault();
                 try {
                   const response = await axios.post(
-                    "http://localhost:3000/api/v1/user/signup",
+                    "https://mere-paise-nikal-backend.onrender.com/api/v1/user/signup",
                     {
                       firstName,
                       lastName,
