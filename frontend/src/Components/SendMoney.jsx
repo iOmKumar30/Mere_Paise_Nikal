@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { Copyright } from "./Signin";
 
 export function SendMoney() {
   const [loading, setLoading] = useState(false);
@@ -96,6 +97,7 @@ export function SendMoney() {
           {loading ? "Sending..." : "Send Money"}
         </button>
       </form>
+      <Copyright sx={{ mt: 8, mb: 4 }} />
     </div>
   );
 }

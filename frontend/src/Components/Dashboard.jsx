@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
-
+import { Copyright } from "./Signin";
 function TopHeader({ username, image }) {
   const userInitial = username ? username.charAt(0).toUpperCase() : "";
   const navigate = useNavigate();
@@ -179,6 +179,7 @@ export function Dashboard() {
       <TopHeader username={user.name} />
       <Balance balance={balance} />
       <UserList users={users} />
+      <Copyright sx={{ mt: 8, mb: 4 }} />
     </div>
   );
 }
