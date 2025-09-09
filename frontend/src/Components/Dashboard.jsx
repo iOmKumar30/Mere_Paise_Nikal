@@ -1,13 +1,14 @@
-import { useState, useEffect, useRef } from "react";
 import axios from "axios";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Copyright } from "./Signin";
+
 function TopHeader({ username, image }) {
   const userInitial = username ? username.charAt(0).toUpperCase() : "";
   const navigate = useNavigate();
   return (
     <div className="flex justify-between items-center border-b border-gray-300 pb-4">
-      <h1 className="text-2xl font-bold text-gray-800">Payments App</h1>
+      <h1 className="text-2xl font-bold text-gray-800">Mere Paise Nikal</h1>
       <div className="flex gap-3 items-center">
         <div className="flex gap-3 items-center">
           <span className="text-gray-600 font-semibold">Hello {username}</span>
@@ -15,7 +16,7 @@ function TopHeader({ username, image }) {
             <img src={image} alt="profile" className="w-8 h-8 rounded-full" />
           ) : (
             <div className="w-8 h-8 rounded-full bg-gray-500 text-white flex items-center justify-center font-bold">
-              {userInitial}
+              {userInitial || "?"}
             </div>
           )}
         </div>
@@ -55,28 +56,14 @@ export function Button({ label, onClick }) {
   );
 }
 
-function UserList({ users = [] }) {
-  const [searchQuery, setSearchQuery] = useState("");
+function UserList({ users = [], searchQuery, onSearchChange }) {
   const navigate = useNavigate();
-  const searchInputRef = useRef();
+  const searchInputRef = useRef(null);
+
   useEffect(() => {
-    // to ensure the search bar gets focus after the component mounts
-    const focusTimeout = setTimeout(() => {
-      if (searchInputRef.current) {
-        searchInputRef.current.focus();
-      }
-    }, 100);
-
-    return () => clearTimeout(focusTimeout);
+    const t = setTimeout(() => searchInputRef.current?.focus(), 100);
+    return () => clearTimeout(t);
   }, []);
-
-  const filteredUsers = users
-    .filter((user) =>
-      `${user.firstName} ${user.lastName}`
-        .toLowerCase()
-        .includes(searchQuery.toLowerCase())
-    )
-    .slice(0, 8);
 
   return (
     <div>
@@ -85,18 +72,19 @@ function UserList({ users = [] }) {
         type="text"
         placeholder="Search Users"
         value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
+        onChange={(e) => onSearchChange(e.target.value)}
         autoComplete="on"
         className="p-2 mb-4 border-black rounded-lg w-full"
         style={{ border: "1px solid black" }}
         ref={searchInputRef}
       />
-      {filteredUsers.map((user) => (
-        <div key={user.id} className="flex justify-between pt-2">
+     
+      {users.slice(0, 8).map((user) => (
+        <div key={user._id} className="flex justify-between pt-2">
           <div className="flex">
             <div className="rounded-full h-12 w-12 bg-slate-200 flex justify-center mt-1 mr-2">
               <div className="flex flex-col justify-center h-full text-xl">
-                {user.firstName[0]}
+                {user.firstName.charAt(0).toUpperCase()}
               </div>
             </div>
             <div className="flex flex-col justify-center h-full">
@@ -124,7 +112,15 @@ export function Dashboard() {
   const [users, setUsers] = useState([]);
   const [balance, setBalance] = useState(0);
   const [user, setUser] = useState(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const navigate = useNavigate();
+
+  // debouncing the search input to avoid too many requests
+  useEffect(() => {
+    const t = setTimeout(() => setDebouncedQuery(searchQuery), 200);
+    return () => clearTimeout(t);
+  }, [searchQuery]);
 
   useEffect(() => {
     const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -134,30 +130,11 @@ export function Dashboard() {
     }
     setUser(storedUser);
 
-    const getUsers = async () => {
-      try {
-        const response = await axios.get(
-          "https://mere-paise-nikal-backend.onrender.com/api/v1/user/bulk"
-        );
-        const data = response.data.users;
-
-        const filteredUsers = Array.isArray(data)
-          ? data.filter((u) => u._id !== storedUser.id)
-          : [];
-        setUsers(filteredUsers);
-      } catch (error) {
-        console.error("Error fetching users:", error);
-        setUsers([]);
-      }
-    };
-
     const getBalance = async () => {
       try {
         const response = await axios.get(
-          "https://mere-paise-nikal-backend.onrender.com/api/v1/account/balance",
-          {
-            headers: { Authorization: `Bearer ${storedUser.token}` },
-          }
+          "http://localhost:3000/api/v1/account/balance",
+          { headers: { Authorization: `Bearer ${storedUser.token}` } }
         );
         setBalance(response.data.balance);
       } catch (error) {
@@ -166,20 +143,50 @@ export function Dashboard() {
       }
     };
 
-    getUsers();
     getBalance();
   }, [navigate]);
 
-  if (!user) {
-    return null;
-  }
+  useEffect(() => {
+    if (!user) return;
+
+    const getUsers = async () => {
+      try {
+        const response = await axios.get(
+          "http://localhost:3000/api/v1/user/bulk",
+          {
+            params: { filter: debouncedQuery || "" },
+          }
+        );
+        const data = response.data.users;
+
+        // exclude yourself from the list
+        const filtered = Array.isArray(data)
+          ? data.filter((u) => u._id !== user.id)
+          : [];
+        setUsers(filtered);
+      } catch (error) {
+        console.error("Error fetching users:", error);
+        setUsers([]);
+      }
+    };
+
+    getUsers();
+  }, [user, debouncedQuery]);
+
+  if (!user) return null;
 
   return (
     <div className="p-3 mt-1">
       <TopHeader username={user.name} />
       <Balance balance={balance} />
-      <UserList users={users} />
-      <Copyright sx={{ mt: 4, mb : 1 }} />
+      <UserList
+        users={users}
+        searchQuery={searchQuery}
+        onSearchChange={setSearchQuery}
+      />
+      <Copyright sx={{ mt: 4, mb: 1 }} />
     </div>
   );
 }
+
+export default Dashboard;

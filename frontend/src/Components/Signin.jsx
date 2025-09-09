@@ -43,7 +43,7 @@ export function Note() {
       <p className="text-gray-500 text-sm mt-4">
         Note: Please wait for 40-45 seconds before sending the first request as
         the server takes some time to initialize after being inactive for a
-        while.l̥
+        while.
       </p>
     </div>
   );
@@ -62,7 +62,7 @@ export function Signin() {
     setError("");
     try {
       const response = await axios.post(
-        "https://mere-paise-nikal-backend.onrender.com/api/v1/user/signin",
+        "http://localhost:3000/api/v1/user/signin",
         {
           username,
           password,

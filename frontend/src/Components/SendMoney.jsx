@@ -33,7 +33,7 @@ export function SendMoney() {
     setLoading(true);
     try {
       const response = await axios.post(
-        "https://mere-paise-nikal-backend.onrender.com/api/v1/account/transfer",
+        "http://localhost:3000/api/v1/account/transfer",
         {
           to: receiver,
           amount: amount,

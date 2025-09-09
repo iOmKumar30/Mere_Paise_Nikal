@@ -1,7 +1,7 @@
 const mongoose = require("mongoose");
 mongoose
   .connect(
-    "mongodb+srv://iOmKumar03:OMiiest%40%4030@newcluster.hyxqq6d.mongodb.net/Payments_App?tls=true&tlsAllowInvalidCertificates=false"
+    "mongodb+srv://omkumar3012:QJjfXvdG0tAGueoy@cluster0.x7f2q.mongodb.net/Mere_Paise_Nikal?tls=true"
   )
   .then(() => console.log("Database connected successfully"))
   .catch((err) => console.log(err));

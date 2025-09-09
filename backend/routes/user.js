@@ -3,12 +3,14 @@ const router = express.Router();
 const zod = require("zod");
 const { User } = require("../db");
 const { Account } = require("../db");
+require("dotenv").config();
 const jwt = require("jsonwebtoken");
 const { authMiddleware } = require("../middlewares");
 const cors = require("cors");
 const app = express();
 app.use(express.json());
 app.use(cors());
+
 const signupSchema = zod.object({
   username: zod.string(),
   password: zod.string(),
@@ -66,19 +68,25 @@ router.post("/signin", async (req, res) => {
   });
 
   if (user) {
-    const token = jwt.sign(
-      {
-        userId: user._id,
-      },
-      process.env.JWT_SECRET
-    );
+    try {
+      const token = jwt.sign(
+        {
+          userId: user._id,
+        },
+        process.env.JWT_SECRET,
+        { expiresIn: "1h" }
+      );
 
-    res.json({
-      token: token,
-      name: user.firstName,
-      id: user._id,
-    });
-    return;
+      res.json({
+        token: token,
+        name: user.firstName,
+        id: user._id,
+      });
+      return;
+    } catch (error) {
+      console.error("Error generating token:", error);
+      res.status(500).json({ message: "Internal Server Error" });
+    }
   } else {
     res.status(404).json({ message: "User not found" });
   }
@@ -102,33 +110,6 @@ router.put("/update", authMiddleware, async (req, res) => {
 /** Route to get users from the backend, filterable via firstName/lastName
 This is needed so users can search for their friends and send them money */
 
-/* router.get("/bulk", async (req, res) => {
-    const filter = req.query.filter || "";
-
-    const users = await User.find({
-        $or: [{
-            firstName: {
-                "$regex": filter
-            }
-        }, {
-            lastName: {
-                "$regex": filter
-            }
-        }]
-    })
-
-    res.json({
-        user: users.map(user => ({
-            username: user.username,
-            firstName: user.firstName,
-            lastName: user.lastName,
-            _id: user._id
-        }))
-    })
-})
- */
-
-// Syntactically better way of doing the above
 router.get("/bulk", async (req, res) => {
   try {
     const { filter = "" } = req.query;
